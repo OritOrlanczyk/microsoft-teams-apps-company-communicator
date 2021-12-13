@@ -14,7 +14,8 @@ export const getInitAdaptiveCard = (t: TFunction) => {
                     "weight": "Bolder",
                     "text": titleTextAsString,
                     "size": "ExtraLarge",
-                    "wrap": true
+                    "wrap": true,
+                    "horizontalAlignment": "Right"
                 },
                 {
                     "type": "Image",
@@ -27,18 +28,21 @@ export const getInitAdaptiveCard = (t: TFunction) => {
                 {
                     "type": "TextBlock",
                     "text": "",
-                    "wrap": true
+                    "wrap": true,
+                    "horizontalAlignment": "Right"
                 },
                 {
                     "type": "TextBlock",
                     "wrap": true,
                     "size": "Small",
                     "weight": "Lighter",
+                    "horizontalAlignment": "Right",
                     "text": ""
+                    
                 }
             ],
             "$schema": "https://adaptivecards.io/schemas/adaptive-card.json",
-            "version": "1.0"
+            "version": "1.5"
         }
     );
 }
