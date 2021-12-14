@@ -139,6 +139,11 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories.Notificat
         public bool AllUsers { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether left or right alignment should be used.
+        /// </summary>
+        public bool Ltr { get; set; }
+
+        /// <summary>
         /// Gets or sets the message version number.
         /// </summary>
         public string MessageVersion { get; set; }

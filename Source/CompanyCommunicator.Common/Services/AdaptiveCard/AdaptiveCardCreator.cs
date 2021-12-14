@@ -27,7 +27,8 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.AdaptiveCard
                 notificationDataEntity.Summary,
                 notificationDataEntity.Author,
                 notificationDataEntity.ButtonTitle,
-                notificationDataEntity.ButtonLink);
+                notificationDataEntity.ButtonLink,
+                notificationDataEntity.Ltr);
         }
 
         /// <summary>
@@ -39,6 +40,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.AdaptiveCard
         /// <param name="author">The adaptive card's author value.</param>
         /// <param name="buttonTitle">The adaptive card's button title value.</param>
         /// <param name="buttonUrl">The adaptive card's button url value.</param>
+        /// <param name="ltr">The adaptive card's ltr alignment value.</param>
         /// <returns>The created adaptive card instance.</returns>
         public AdaptiveCard CreateAdaptiveCard(
             string title,
@@ -46,7 +48,8 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.AdaptiveCard
             string summary,
             string author,
             string buttonTitle,
-            string buttonUrl)
+            string buttonUrl,
+            bool ltr)
         {
             var version = new AdaptiveSchemaVersion(1, 0);
             AdaptiveCard card = new AdaptiveCard(version);
@@ -57,6 +60,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.AdaptiveCard
                 Size = AdaptiveTextSize.ExtraLarge,
                 Weight = AdaptiveTextWeight.Bolder,
                 Wrap = true,
+                HorizontalAlignment = ltr ? AdaptiveHorizontalAlignment.Left : AdaptiveHorizontalAlignment.Right,
             });
 
             if (!string.IsNullOrWhiteSpace(imageUrl))
@@ -76,6 +80,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.AdaptiveCard
                 {
                     Text = summary,
                     Wrap = true,
+                    HorizontalAlignment = ltr ? AdaptiveHorizontalAlignment.Left : AdaptiveHorizontalAlignment.Right,
                 });
             }
 
@@ -87,6 +92,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.AdaptiveCard
                     Size = AdaptiveTextSize.Small,
                     Weight = AdaptiveTextWeight.Lighter,
                     Wrap = true,
+                    HorizontalAlignment = ltr ? AdaptiveHorizontalAlignment.Left : AdaptiveHorizontalAlignment.Right,
                 });
             }
 

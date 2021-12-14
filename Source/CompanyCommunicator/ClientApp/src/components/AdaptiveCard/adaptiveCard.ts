@@ -3,7 +3,7 @@
 
 import { TFunction } from "i18next";
 
-export const getInitAdaptiveCard = (t: TFunction) => {
+export const getInitAdaptiveCard = (t: TFunction, horizontalAlignmentAsString: string) => {
     const titleTextAsString = t("TitleText");
     return (
         {
@@ -15,7 +15,7 @@ export const getInitAdaptiveCard = (t: TFunction) => {
                     "text": titleTextAsString,
                     "size": "ExtraLarge",
                     "wrap": true,
-                    "horizontalAlignment": "Right"
+                    "horizontalAlignment": horizontalAlignmentAsString
                 },
                 {
                     "type": "Image",
@@ -29,14 +29,14 @@ export const getInitAdaptiveCard = (t: TFunction) => {
                     "type": "TextBlock",
                     "text": "",
                     "wrap": true,
-                    "horizontalAlignment": "Right"
+                    "horizontalAlignment": horizontalAlignmentAsString
                 },
                 {
                     "type": "TextBlock",
                     "wrap": true,
                     "size": "Small",
                     "weight": "Lighter",
-                    "horizontalAlignment": "Right",
+                    "horizontalAlignment": horizontalAlignmentAsString,
                     "text": ""
                     
                 }
@@ -45,6 +45,13 @@ export const getInitAdaptiveCard = (t: TFunction) => {
             "version": "1.5"
         }
     );
+}
+
+
+export const setCardHorizontalAlighnment = (card: any, horizontalAlignmentAsString: string) => {
+    card.body[0].horizontalAlignment = horizontalAlignmentAsString;
+    card.body[2].horizontalAlignment = horizontalAlignmentAsString;
+    card.body[3].horizontalAlignment = horizontalAlignmentAsString;
 }
 
 export const getCardTitle = (card: any) => {

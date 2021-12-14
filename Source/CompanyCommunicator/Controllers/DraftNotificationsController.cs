@@ -160,6 +160,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Controllers
                 Rosters = notification.Rosters,
                 Groups = notification.Groups,
                 AllUsers = notification.AllUsers,
+                Ltr = notification.Ltr,
             };
 
             await this.notificationDataRepository.CreateOrUpdateAsync(notificationEntity);

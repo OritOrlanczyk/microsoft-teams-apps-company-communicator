@@ -14,7 +14,7 @@ import './teamTheme.scss';
 import { getDraftNotification, getTeams, createDraftNotification, updateDraftNotification, searchGroups, getGroups, verifyGroupAccess } from '../../apis/messageListApi';
 import {
     getInitAdaptiveCard, setCardTitle, setCardImageLink, setCardSummary,
-    setCardAuthor, setCardBtn
+    setCardAuthor, setCardHorizontalAlighnment, setCardBtn
 } from '../AdaptiveCard/adaptiveCard';
 import { getBaseUrl } from '../../configVariables';
 import { ImageUtil } from '../../utility/imageutility';
@@ -41,7 +41,8 @@ export interface IDraftMessage {
     teams: any[],
     rosters: any[],
     groups: any[],
-    allUsers: boolean
+    allUsers: boolean,
+    ltr: boolean
 }
 
 export interface formState {
@@ -75,6 +76,7 @@ export interface formState {
     selectedGroups: dropdownItem[],
     errorImageUrlMessage: string,
     errorButtonUrlMessage: string,
+    ltr: boolean,
 }
 
 export interface INewMessageProps extends RouteComponentProps, WithTranslation {
@@ -88,8 +90,9 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
     constructor(props: INewMessageProps) {
         super(props);
         initializeIcons();
+        let ltr: boolean = false;
         this.localize = this.props.t;
-        this.card = getInitAdaptiveCard(this.localize);
+        this.card = getInitAdaptiveCard(this.localize, ltr ? "Left" : "Right");
         this.setDefaultCard(this.card);
 
         this.state = {
@@ -120,6 +123,7 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
             selectedGroups: [],
             errorImageUrlMessage: "",
             errorButtonUrlMessage: "",
+            ltr: ltr,
         }
     }
 
@@ -127,6 +131,7 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
         microsoftTeams.initialize();
         //- Handle the Esc key
         document.addEventListener("keydown", this.escFunction, false);
+        
         let params = this.props.match.params;
         this.setGroupAccess();
         this.getTeamList().then(() => {
@@ -333,6 +338,30 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
                             <Flex className="scrollableContent">
                                 <Flex.Item size="size.half">
                                     <Flex column className="formContentContainer">
+                                        <div className="radio">
+                                            <label>
+                                                <Input 
+                                                    type="radio"
+                                                    value="RTL"
+                                                    style={{ marginLeft: '0.8rem', marginTop: '0.8rem'}}
+                                                    checked={!this.state.ltr}
+                                                    onChange={this.onLtrChanged}
+                                                />
+                                                Right To Left
+                                            </label>
+                                        </div>
+                                        <div className="radio">
+                                            <label>
+                                                <Input
+                                                    type="radio"
+                                                    value="LTR"
+                                                    style={{ marginLeft: '0.8rem' }}
+                                                    checked={this.state.ltr}
+                                                    onChange={this.onLtrChanged}
+                                                />
+                                                Left To Right
+                                            </label>
+                                        </div>
                                         <Input className="inputField"
                                             value={this.state.title}
                                             label={this.localize("TitleText")}
@@ -717,7 +746,8 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
             teams: selectedTeams,
             rosters: selctedRosters,
             groups: selectedGroups,
-            allUsers: this.state.allUsersOptionSelected
+            allUsers: this.state.allUsersOptionSelected,
+            ltr: false
         };
 
         if (this.state.exists) {
@@ -764,6 +794,20 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
     private onBack = (event: any) => {
         this.setState({
             page: "CardCreation"
+        }, () => {
+            this.updateCard();
+        });
+    }
+
+    private onLtrChanged = (event: any) => {
+        setCardTitle(this.card, this.state.title);
+        setCardImageLink(this.card, this.state.imageLink);
+        setCardSummary(this.card, this.state.summary);
+        setCardAuthor(this.card, this.state.author);
+        setCardBtn(this.card, this.state.btnTitle, this.state.btnLink);
+        setCardHorizontalAlighnment(this.card, event.target.value === "LTR" ? "Left" : "Right")
+        this.setState({
+            ltr: event.target.value === "LTR" ? true : false,
         }, () => {
             this.updateCard();
         });
