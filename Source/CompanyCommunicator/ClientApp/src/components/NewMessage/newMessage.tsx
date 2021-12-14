@@ -301,6 +301,7 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
             setCardSummary(this.card, draftMessageDetail.summary);
             setCardAuthor(this.card, draftMessageDetail.author);
             setCardBtn(this.card, draftMessageDetail.buttonTitle, draftMessageDetail.buttonLink);
+            setCardHorizontalAlighnment(this.card, draftMessageDetail.ltr ? "Left" : "Right");
 
             this.setState({
                 title: draftMessageDetail.title,
@@ -310,6 +311,7 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
                 btnTitle: draftMessageDetail.buttonTitle,
                 author: draftMessageDetail.author,
                 allUsersOptionSelected: draftMessageDetail.allUsers,
+                ltr: draftMessageDetail.ltr,
                 loader: false
             }, () => {
                 this.updateCard();
@@ -322,6 +324,9 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
     public componentWillUnmount() {
         document.removeEventListener("keydown", this.escFunction, false);
     }
+
+    private ltrString = "LTR"
+    private rtlString = "RTL"
 
     public render(): JSX.Element {
         if (this.state.loader) {
@@ -342,28 +347,29 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
                                             <label>
                                                 <Input 
                                                     type="radio"
-                                                    value="RTL"
+                                                    value={this.rtlString}
                                                     style={{ marginLeft: '0.8rem', marginTop: '0.8rem'}}
                                                     checked={!this.state.ltr}
                                                     onChange={this.onLtrChanged}
                                                 />
-                                                Right To Left
+                                                RTL
                                             </label>
                                         </div>
                                         <div className="radio">
                                             <label>
                                                 <Input
                                                     type="radio"
-                                                    value="LTR"
+                                                    value={this.ltrString}
                                                     style={{ marginLeft: '0.8rem' }}
                                                     checked={this.state.ltr}
                                                     onChange={this.onLtrChanged}
                                                 />
-                                                Left To Right
+                                                LTR
                                             </label>
                                         </div>
                                         <Input className="inputField"
                                             value={this.state.title}
+                                            //value={this.state.ltr ? "true" : "false"}
                                             label={this.localize("TitleText")}
                                             placeholder={this.localize("PlaceHolderTitle")}
                                             onChange={this.onTitleChanged}
@@ -747,7 +753,7 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
             rosters: selctedRosters,
             groups: selectedGroups,
             allUsers: this.state.allUsersOptionSelected,
-            ltr: false
+            ltr: this.state.ltr,
         };
 
         if (this.state.exists) {
@@ -805,9 +811,9 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
         setCardSummary(this.card, this.state.summary);
         setCardAuthor(this.card, this.state.author);
         setCardBtn(this.card, this.state.btnTitle, this.state.btnLink);
-        setCardHorizontalAlighnment(this.card, event.target.value === "LTR" ? "Left" : "Right")
+        setCardHorizontalAlighnment(this.card, event.target.value === this.ltrString ? "Left" : "Right");
         this.setState({
-            ltr: event.target.value === "LTR" ? true : false,
+            ltr: (event.target.value === this.ltrString) ? true : false,
         }, () => {
             this.updateCard();
         });
@@ -849,6 +855,7 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
         setCardSummary(this.card, this.state.summary);
         setCardAuthor(this.card, this.state.author);
         setCardBtn(this.card, this.state.btnTitle, this.state.btnLink);
+        setCardHorizontalAlighnment(this.card, this.state.ltr ? "Left" : "Right");
         this.setState({
             imageLink: event.target.value,
             card: this.card

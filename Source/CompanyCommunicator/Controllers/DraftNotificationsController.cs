@@ -253,6 +253,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Controllers
                 Rosters = notificationEntity.Rosters,
                 Groups = notificationEntity.Groups,
                 AllUsers = notificationEntity.AllUsers,
+                Ltr = notificationEntity.Ltr,
             };
 
             return this.Ok(result);
