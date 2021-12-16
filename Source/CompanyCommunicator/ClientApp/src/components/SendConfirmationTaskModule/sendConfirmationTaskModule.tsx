@@ -12,7 +12,7 @@ import './sendConfirmationTaskModule.scss';
 import { getDraftNotification, getConsentSummaries, sendDraftNotification } from '../../apis/messageListApi';
 import {
     getInitAdaptiveCard, setCardTitle, setCardImageLink, setCardSummary,
-    setCardAuthor, setCardBtn
+    setCardAuthor, setCardBtn, setCardHorizontalAlighnment
 } from '../AdaptiveCard/adaptiveCard';
 import { ImageUtil } from '../../utility/imageutility';
 import { TFunction } from "i18next";
@@ -50,6 +50,7 @@ export interface IStatusState {
     groupNames: string[];
     allUsers: boolean;
     messageId: number;
+    ltr: boolean;
 }
 
 class SendConfirmationTaskModule extends React.Component<SendConfirmationTaskModuleProps, IStatusState> {
@@ -60,11 +61,12 @@ class SendConfirmationTaskModule extends React.Component<SendConfirmationTaskMod
     };
 
     private card: any;
-
+     
     constructor(props: SendConfirmationTaskModuleProps) {
         super(props);
+        let ltr: boolean = false;
         this.localize = this.props.t;
-        this.card = getInitAdaptiveCard(this.localize);
+        this.card = getInitAdaptiveCard(this.localize, ltr ? "Left" : "Right");
 
         this.state = {
             message: this.initMessage,
@@ -74,6 +76,7 @@ class SendConfirmationTaskModule extends React.Component<SendConfirmationTaskMod
             groupNames: [],
             allUsers: false,
             messageId: 0,
+            ltr: ltr,
         };
     }
 
@@ -92,6 +95,7 @@ class SendConfirmationTaskModule extends React.Component<SendConfirmationTaskMod
                         groupNames: response.data.groupNames.sort(),
                         allUsers: response.data.allUsers,
                         messageId: id,
+                        ltr: response.data.ltr,
                     }, () => {
                         this.setState({
                             loader: false
@@ -103,6 +107,7 @@ class SendConfirmationTaskModule extends React.Component<SendConfirmationTaskMod
                             if (this.state.message.buttonTitle && this.state.message.buttonLink) {
                                 setCardBtn(this.card, this.state.message.buttonTitle, this.state.message.buttonLink);
                             }
+                            setCardHorizontalAlighnment(this.card,this.state.ltr ? "Left" : "Right")
 
                             let adaptiveCard = new AdaptiveCards.AdaptiveCard();
                             adaptiveCard.parse(this.card);
@@ -123,7 +128,8 @@ class SendConfirmationTaskModule extends React.Component<SendConfirmationTaskMod
         try {
             const response = await getDraftNotification(id);
             this.setState({
-                message: response.data
+                message: response.data,
+                ltr: response.data.ltr
             });
         } catch (error) {
             return error;

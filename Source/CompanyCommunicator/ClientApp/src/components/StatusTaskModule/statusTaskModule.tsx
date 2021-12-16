@@ -12,7 +12,7 @@ import { Loader, List, Image, Button, DownloadIcon, AcceptIcon, Flex } from '@fl
 import * as microsoftTeams from "@microsoft/teams-js";
 import {
     getInitAdaptiveCard, setCardTitle, setCardImageLink, setCardSummary,
-    setCardAuthor, setCardBtn
+    setCardAuthor, setCardBtn, setCardHorizontalAlighnment
 } from '../AdaptiveCard/adaptiveCard';
 import { ImageUtil } from '../../utility/imageutility';
 import { formatDate, formatDuration, formatNumber } from '../../i18n';
@@ -55,6 +55,7 @@ export interface IStatusState {
     loader: boolean;
     page: string;
     teamId?: string;
+    ltr: boolean;
 }
 
 interface StatusTaskModuleProps extends RouteComponentProps, WithTranslation { }
@@ -70,16 +71,17 @@ class StatusTaskModule extends React.Component<StatusTaskModuleProps, IStatusSta
 
     constructor(props: StatusTaskModuleProps) {
         super(props);
-
+        let ltr: boolean = false;
         this.localize = this.props.t;
 
-        this.card = getInitAdaptiveCard(this.props.t);
+        this.card = getInitAdaptiveCard(this.props.t, ltr ? "Left" : "Right");
 
         this.state = {
             message: this.initMessage,
             loader: true,
             page: "ViewStatus",
             teamId: '',
+            ltr: ltr,
         };
     }
 
@@ -105,6 +107,7 @@ class StatusTaskModule extends React.Component<StatusTaskModuleProps, IStatusSta
                     if (this.state.message.buttonTitle !== "" && this.state.message.buttonLink !== "") {
                         setCardBtn(this.card, this.state.message.buttonTitle, this.state.message.buttonLink);
                     }
+                    setCardHorizontalAlighnment(this.card, this.state.ltr ? "Lerft" : "Right");
 
                     let adaptiveCard = new AdaptiveCards.AdaptiveCard();
                     adaptiveCard.parse(this.card);
@@ -127,7 +130,8 @@ class StatusTaskModule extends React.Component<StatusTaskModuleProps, IStatusSta
             response.data.failed = formatNumber(response.data.failed);
             response.data.unknown = response.data.unknown && formatNumber(response.data.unknown);
             this.setState({
-                message: response.data
+                message: response.data,
+                ltr: response.data.ltr
             });
         } catch (error) {
             return error;
