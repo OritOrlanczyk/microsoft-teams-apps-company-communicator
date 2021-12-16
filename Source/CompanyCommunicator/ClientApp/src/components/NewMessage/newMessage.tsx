@@ -369,7 +369,6 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
                                         </div>
                                         <Input className="inputField"
                                             value={this.state.title}
-                                            //value={this.state.ltr ? "true" : "false"}
                                             label={this.localize("TitleText")}
                                             placeholder={this.localize("PlaceHolderTitle")}
                                             onChange={this.onTitleChanged}
@@ -806,6 +805,7 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
     }
 
     private onLtrChanged = (event: any) => {
+        let showDefaultCard = (!this.state.title && !this.state.imageLink && !this.state.summary && !this.state.author && !this.state.btnTitle && !this.state.btnLink);
         setCardTitle(this.card, this.state.title);
         setCardImageLink(this.card, this.state.imageLink);
         setCardSummary(this.card, this.state.summary);
@@ -814,7 +814,11 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
         setCardHorizontalAlighnment(this.card, event.target.value === this.ltrString ? "Left" : "Right");
         this.setState({
             ltr: (event.target.value === this.ltrString) ? true : false,
+            card: this.card
         }, () => {
+            if (showDefaultCard) {
+                this.setDefaultCard(this.card);
+            }
             this.updateCard();
         });
     }
